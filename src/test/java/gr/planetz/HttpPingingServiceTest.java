@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fh.wed.uni.mp.hp.impl.HttpPingingService;
+import gr.planetz.impl.HttpPingingService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpPingingServiceTest {

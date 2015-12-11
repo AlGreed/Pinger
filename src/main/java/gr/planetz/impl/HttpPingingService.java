@@ -18,9 +18,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fh.wed.uni.mp.hp.PingingService;
-import fh.wed.uni.mp.hp.model.PingRequest;
-import fh.wed.uni.mp.hp.model.PingResponse;
+import gr.planetz.PingingService;
+import gr.planetz.model.PingRequest;
+import gr.planetz.model.PingResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -117,7 +117,7 @@ public class HttpPingingService implements PingingService {
     }
 
     @Override
-    public void setPeriod(long period) {
+    public void setPeriod(final long period) {
         this.period = period;
     }
 

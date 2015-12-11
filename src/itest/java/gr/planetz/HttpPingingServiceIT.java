@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fh.wed.uni.mp.hp.impl.HttpPingingService;
+import gr.planetz.impl.HttpPingingService;
 
 import com.github.tomakehurst.wiremock.http.MimeType;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
