@@ -1,5 +1,11 @@
 package gr.planetz.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,8 +18,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +34,8 @@ import gr.planetz.model.PingRequest;
 import gr.planetz.model.PingResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.net.ssl.SSLContext;
 
 public class HttpPingingService implements PingingService {
 
@@ -44,10 +57,18 @@ public class HttpPingingService implements PingingService {
 
     private long period = 2000;
 
-    public HttpPingingService(final String uri, final String nickname, final HttpClient httpClient) {
+    public HttpPingingService(final String uri, final String nickname, final String keystore, final String password) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
         this.uri = Objects.requireNonNull(uri, "|uri| must not be null!");
         this.request = new PingRequest(Objects.requireNonNull(nickname, "|nickname| must not be null!"));
-        this.httpClient = httpClient == null ? HttpClientBuilder.create().build() : httpClient;
+        HttpClientBuilder httpClientBuilder = HttpClients.custom();
+        if (keystore != null && password != null){
+            LOG.info("Configuring of SSL...");
+            final SSLContext sslcontext = SSLContexts.custom()
+                    .loadTrustMaterial(new File(keystore), password.toCharArray(), new TrustSelfSignedStrategy()).build();
+            final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[]{"TLSv1"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            httpClientBuilder = httpClientBuilder.setSSLSocketFactory(sslsf);
+        }
+        this.httpClient = httpClientBuilder.build();
         this.mapper = new ObjectMapper();
     }
 

@@ -49,7 +49,7 @@ public class HttpPingingServiceIT {
         // prepare
         final String expectedJson = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"DukeNukem\":\"123.34.52.12\"}}";
         final int numberOfPlayers = 2;
-        final PingingService service = new HttpPingingService(URI, NICKNAME, null);
+        final PingingService service = new HttpPingingService(URI, NICKNAME, null, null);
 
         // @formatter:off
         WIRE_MOCK_RULE.stubFor(post(urlMatching(".*"))
@@ -77,7 +77,7 @@ public class HttpPingingServiceIT {
         final String twoPlayers = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"DukeNukem\":\"123.34.52.12\"}}";
         final String onePlayer = "{\"Players\":{\"AlGreed\":\"100.50.23.34\"}}";
         final String threePlayers = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"Flash\":\"123.34.52.13\",\"Batman\":\"123.34.52.14\"}}";
-        final PingingService service = new HttpPingingService(URI, NICKNAME, null);
+        final PingingService service = new HttpPingingService(URI, NICKNAME, null, null);
 
         // perform
         service.start();

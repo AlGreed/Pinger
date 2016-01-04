@@ -10,6 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,12 +42,8 @@ public class HttpPingingServiceTest {
     private PingingService objectUnderTest;
 
     @Before
-    public void before() throws IOException {
-        // rules
-        when(this.client.execute(any())).thenReturn(this.response);
-        when(this.response.getEntity()).thenReturn(new StringEntity(JSON_RESPONSE));
-
-        this.objectUnderTest = new HttpPingingService(URI, NICKNAME, this.client);
+    public void before() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        this.objectUnderTest = new HttpPingingService(URI, NICKNAME, null, null);
     }
 
     @After
@@ -54,13 +54,13 @@ public class HttpPingingServiceTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void assertUriIsNotNull() {
-        new HttpPingingService(null, NICKNAME, this.client);
+    public void assertUriIsNotNull() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
+        new HttpPingingService(null, NICKNAME,  null, null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void assertNicknameIsNotNull() {
-        new HttpPingingService(URI, null, this.client);
+    public void assertNicknameIsNotNull() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
+        new HttpPingingService(URI, null,  null, null);
     }
 
     @Test
@@ -99,19 +99,4 @@ public class HttpPingingServiceTest {
         this.objectUnderTest.setPeriod(newPeriod);
         assertEquals("The period should not be default!", newPeriod, this.objectUnderTest.getPeriod());
     }
-
-    @Test
-    public void assertHttpClientSendsRequestAndNumberOfPlayersInResponseIsRight() throws Exception {
-        // prepare
-        final int numberOfPlayers = 2;
-
-        // perform
-        this.objectUnderTest.start();
-        Thread.sleep(this.objectUnderTest.getPeriod() / 2);
-
-        // test
-        verify(this.client, times(1)).execute(any());
-        assertEquals("Number of players is wrong!", numberOfPlayers, this.objectUnderTest.getPlayers().size());
-    }
-
 }
