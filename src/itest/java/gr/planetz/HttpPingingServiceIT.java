@@ -14,10 +14,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gr.planetz.impl.HttpPingingService;
-
 import com.github.tomakehurst.wiremock.http.MimeType;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import gr.planetz.impl.HttpPingingService;
 
 public class HttpPingingServiceIT {
 
@@ -27,13 +26,13 @@ public class HttpPingingServiceIT {
 
     private static final String URI = "http://localhost:" + PORT;
 
+    private static final String     ADDRESS              = "http://fire.in.the.hole:777/omg";
+
+    private static final String     NICKNAME             = "AlGreed";
     @ClassRule
     public static WireMockClassRule WIRE_MOCK_RULE = new WireMockClassRule(PORT);
-
     @Rule
     public WireMockClassRule wireMockInstanceRule = WIRE_MOCK_RULE;
-
-    private static final String NICKNAME = "AlGreed";
 
     @BeforeClass
     public static void setStubs() {
@@ -47,9 +46,9 @@ public class HttpPingingServiceIT {
     @Test
     public void assertThatRequestWillBeSentAndResponseContainsRightNumberOfPlayers() throws Exception {
         // prepare
-        final String expectedJson = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"DukeNukem\":\"123.34.52.12\"}}";
+        final String expectedJson = "{\"Players\":{\"AlGreed\":\"ADDRESS\",\"DukeNukem\":\"123.34.52.12\"}}";
         final int numberOfPlayers = 2;
-        final PingingService service = new HttpPingingService(URI, NICKNAME, null, null);
+        final PingingService service = new HttpPingingService(URI, NICKNAME, ADDRESS, null, null);
 
         // @formatter:off
         WIRE_MOCK_RULE.stubFor(post(urlMatching(".*"))
@@ -74,10 +73,10 @@ public class HttpPingingServiceIT {
     @Test
     public void assertThatChangingWithTimeNumberOfPlayersWillBeCorrectRecognized() throws Exception {
         // prepare
-        final String twoPlayers = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"DukeNukem\":\"123.34.52.12\"}}";
-        final String onePlayer = "{\"Players\":{\"AlGreed\":\"100.50.23.34\"}}";
-        final String threePlayers = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"Flash\":\"123.34.52.13\",\"Batman\":\"123.34.52.14\"}}";
-        final PingingService service = new HttpPingingService(URI, NICKNAME, null, null);
+        final String twoPlayers = "{\"Players\":{\"AlGreed\":\"ADDRESS\",\"DukeNukem\":\"123.34.52.12\"}}";
+        final String onePlayer = "{\"Players\":{\"AlGreed\":\"ADDRESS\"}}";
+        final String threePlayers = "{\"Players\":{\"AlGreed\":\"ADDRESS\",\"Flash\":\"123.34.52.13\",\"Batman\":\"123.34.52.14\"}}";
+        final PingingService service = new HttpPingingService(URI, NICKNAME, ADDRESS, null, null);
 
         // perform
         service.start();

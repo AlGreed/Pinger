@@ -3,11 +3,7 @@ package gr.planetz;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -17,7 +13,6 @@ import java.security.cert.CertificateException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.entity.StringEntity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +30,8 @@ public class HttpPingingServiceTest {
 
     private static final String JSON_RESPONSE = "{\"Players\":{\"AlGreed\":\"100.50.23.34\",\"DukeNukem\":\"123.34.52.12\"}}";
 
+    private static final String ADDRESS       = "http://fire.in.the.hole:777/omg";
+
     private final HttpClient client = mock(HttpClient.class);
 
     private final HttpResponse response = mock(HttpResponse.class);
@@ -43,7 +40,7 @@ public class HttpPingingServiceTest {
 
     @Before
     public void before() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        this.objectUnderTest = new HttpPingingService(URI, NICKNAME, null, null);
+        this.objectUnderTest = new HttpPingingService(URI, NICKNAME, ADDRESS, null, null);
     }
 
     @After
@@ -55,12 +52,12 @@ public class HttpPingingServiceTest {
 
     @Test(expected = NullPointerException.class)
     public void assertUriIsNotNull() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
-        new HttpPingingService(null, NICKNAME,  null, null);
+        new HttpPingingService(null, NICKNAME, ADDRESS, null, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void assertNicknameIsNotNull() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
-        new HttpPingingService(URI, null,  null, null);
+        new HttpPingingService(URI, null, ADDRESS, null, null);
     }
 
     @Test

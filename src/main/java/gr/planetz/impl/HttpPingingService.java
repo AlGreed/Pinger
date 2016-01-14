@@ -15,13 +15,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
@@ -29,13 +30,11 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import gr.planetz.PingingService;
 import gr.planetz.model.PingRequest;
 import gr.planetz.model.PingResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.net.ssl.SSLContext;
 
 public class HttpPingingService implements PingingService {
 
@@ -57,9 +56,10 @@ public class HttpPingingService implements PingingService {
 
     private long period = 2000;
 
-    public HttpPingingService(final String uri, final String nickname, final String keystore, final String password) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
+    public HttpPingingService(final String uri, final String nickname, final String address, final String keystore, final String password) throws CertificateException, NoSuchAlgorithmException,
+            KeyStoreException, IOException, KeyManagementException {
         this.uri = Objects.requireNonNull(uri, "|uri| must not be null!");
-        this.request = new PingRequest(Objects.requireNonNull(nickname, "|nickname| must not be null!"));
+        this.request = new PingRequest(Objects.requireNonNull(nickname, "|nickname| must not be null!"), Objects.requireNonNull(address, "|address| must not be null!"));
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
         if (keystore != null && password != null){
             LOG.info("Configuring of SSL...");
