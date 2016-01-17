@@ -133,6 +133,11 @@ public class HttpPingingService implements PingingService {
     }
 
     @Override
+    public HttpClient getHttpClient() {
+        return this.httpClient;
+    }
+
+    @Override
     public long getPeriod() {
         return this.period;
     }

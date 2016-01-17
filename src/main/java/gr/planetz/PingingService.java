@@ -2,6 +2,8 @@ package gr.planetz;
 
 import java.util.Map;
 
+import org.apache.http.client.HttpClient;
+
 public interface PingingService {
 
     /**
@@ -29,8 +31,7 @@ public interface PingingService {
     long getPeriod();
 
     /**
-     * Frequency of pinging. Default value is 2000 millis.
-     * If you change the period value after start, you need to restart service.
+     * Frequency of pinging. Default value is 2000 millis. If you change the period value after start, you need to restart service.
      *
      * @param period time in millis.
      */
@@ -42,4 +43,6 @@ public interface PingingService {
      * @return boolean
      */
     boolean isRunning();
+
+    HttpClient getHttpClient();
 }
