@@ -2,6 +2,7 @@ package gr.planetz.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +20,7 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -126,15 +128,20 @@ public class HttpPingingService implements PingingService {
     }
 
     @Override
-    public Map<String, String> getPlayers() {
-        final Map<String, String> shallowCopy = new HashMap<String, String>();
-        shallowCopy.putAll(this.players);
-        return shallowCopy;
+    public Map<String, String> getPlayersDirectlyOverHttpGetRequest() throws IOException {
+        if (!isRunning()) {
+            final HttpGet request = new HttpGet(URI.create(this.uri));
+            final HttpResponse response = httpClient.execute(request);
+            return this.mapper.readValue(EntityUtils.toString(response.getEntity()), PingResponse.class).getPlayers();
+        }
+        return null;
     }
 
     @Override
-    public HttpClient getHttpClient() {
-        return this.httpClient;
+    public Map<String, String> getPlayers() {
+        final Map<String, String> shallowCopy = new HashMap<>();
+        shallowCopy.putAll(this.players);
+        return shallowCopy;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package gr.planetz;
 
+import java.io.IOException;
 import java.util.Map;
-
-import org.apache.http.client.HttpClient;
 
 public interface PingingService {
 
@@ -44,5 +43,5 @@ public interface PingingService {
      */
     boolean isRunning();
 
-    HttpClient getHttpClient();
+    Map<String, String> getPlayersDirectlyOverHttpGetRequest() throws IOException;
 }
