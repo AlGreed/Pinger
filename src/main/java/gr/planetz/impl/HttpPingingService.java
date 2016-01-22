@@ -67,7 +67,7 @@ public class HttpPingingService implements PingingService {
             LOG.info("Configuring of SSL...");
             final SSLContext sslcontext = SSLContexts.custom()
                     .loadTrustMaterial(new File(keystore), password.toCharArray(), new TrustSelfSignedStrategy()).build();
-            final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[]{"TLSv1"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[] {"TLSv1.2"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
             httpClientBuilder = httpClientBuilder.setSSLSocketFactory(sslsf);
         }
         this.httpClient = httpClientBuilder.build();
