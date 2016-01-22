@@ -9,7 +9,7 @@
   
 ##Usage
 
-1. Ping IPBroker server acting as active player:
+1) Ping IPBroker server acting as active player:
 - Create an instance of HttpPingingService passing IPBroker address, client nickname, client ip address, keystore with certificates and password to keystore.
 - Start the service.
 - Create a thread, that calls getPlayers() with fixed rate.
@@ -21,7 +21,7 @@ Map<String,String> players = service.getPlayers();
 ...
 ```
 
-2. Send a GET-Request to server getting once all active players without adding yourself to them:
+2) Send a GET-Request to server getting once all active players without adding yourself to them:
 - Create an instance of HttpPingingService. This time nickname and client ip are redundant.
 - Do not start the service.
 - Call getPlayersDirectlyOverHttpGetRequest().
